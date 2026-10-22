@@ -1,0 +1,38 @@
+# Wakes the checker every minute while this laptop is shut.
+# GitHub starts this job about every five minutes. The job itself checks,
+# waits a minute, and checks again, five times.
+#
+# Repository secrets:
+#   CHECK_URL    https://<this-project>.vercel.app/api/check
+#   CRON_SECRET  the same value as CRON_SECRET on the Vercel project
+name: validator-alert-check
+
+on:
+  schedule:
+    - cron: "*/5 * * * *"
+  workflow_dispatch:
+
+concurrency:
+  group: validator-alert-check
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check watched validators
+        env:
+          CHECK_URL: ${{ secrets.CHECK_URL }}
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
+        run: |
+          if [ -z "$CHECK_URL" ] || [ -z "$CRON_SECRET" ]; then
+            echo "CHECK_URL and CRON_SECRET are not set on this repository."
+            exit 1
+          fi
+          for i in 1 2 3 4 5; do
+            curl -fsS -m 50 -H "Authorization: Bearer $CRON_SECRET" "$CHECK_URL" || echo "check $i failed"
+            echo
+            if [ "$i" != "5" ]; then
+              sleep 60
+            fi
+          done
