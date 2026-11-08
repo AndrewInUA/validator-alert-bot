@@ -5,7 +5,7 @@
  */
 const { mainKeyboard } = require("../lib/commands");
 const { createStore } = require("../lib/store");
-const { readFacts } = require("../lib/solana");
+const { readFacts, readCluster, readStake, readRules } = require("../lib/solana");
 const { runAlerts } = require("../lib/run");
 const { botToken, sendMessage } = require("../lib/telegram");
 
@@ -68,11 +68,14 @@ module.exports = async function check(req, res) {
       subs,
       getStatus: key => store.getStatus(key),
       setStatus: (key, value) => store.setStatus(key, value),
-      readFacts
+      readFacts,
+      readCluster,
+      readStake,
+      readRules
     });
     let sent = 0;
     for (const alert of alerts) {
-      await sendMessage(alert.chatId, alert.text, { reply_markup: mainKeyboard() });
+      await sendMessage(alert.chatId, alert.text, { reply_markup: mainKeyboard(alert.balanceNotes) });
       sent += 1;
     }
     json(res, 200, { ok: true, watchedChats: subs.length, sent });

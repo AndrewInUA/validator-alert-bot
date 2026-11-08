@@ -3,7 +3,7 @@
   "private": true,
   "description": "Telegram alerts for Solana validator operators. A separate product from delegator stake health.",
   "scripts": {
-    "test": "node --test lib/classify.test.js lib/commands.test.js lib/run.test.js"
+    "test": "node --test lib/classify.test.js lib/commands.test.js lib/balance.test.js lib/version-alert.test.js lib/stake-line.test.js lib/stake-report.test.js lib/run.test.js"
   },
   "engines": {
     "node": ">=18"

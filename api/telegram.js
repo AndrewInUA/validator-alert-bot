@@ -5,7 +5,8 @@
  */
 const { handleText, mainKeyboard } = require("../lib/commands");
 const { createStore } = require("../lib/store");
-const { lookupVote, readFacts } = require("../lib/solana");
+const { lookupVote, readFacts, readCluster, readStake, readStakeDetail, readRules } = require("../lib/solana");
+const { readPools } = require("../lib/pool-directory");
 const { botToken, sendMessage } = require("../lib/telegram");
 
 function json(res, status, body) {
@@ -79,7 +80,16 @@ module.exports = async function telegramWebhook(req, res) {
 
   const store = createStore();
   try {
-    const reply = await handleText(chatId, text, { store, lookup: lookupVote, readFacts });
+    const reply = await handleText(chatId, text, {
+      store,
+      lookup: lookupVote,
+      readFacts,
+      readCluster,
+      readStake,
+      readStakeDetail,
+      readPools,
+      readRules
+    });
     const body = reply && typeof reply === "object" ? reply.text : reply;
     const markup = (reply && reply.markup) || mainKeyboard();
     if (body) await sendMessage(chatId, body, { reply_markup: markup });
