@@ -1,6 +1,6 @@
-# Wakes the checker every minute while this laptop is shut.
-# GitHub starts this job about every five minutes. The job itself checks,
-# waits a minute, and checks again, five times.
+# Wakes the checker every five minutes while this laptop is shut.
+# One call per run. Calling Vercel every minute was using almost all of the
+# free team's Fluid CPU, and crossing that cap pauses every project on the team.
 #
 # Repository secrets:
 #   CHECK_URL    https://<this-project>.vercel.app/api/check
@@ -29,10 +29,5 @@ jobs:
             echo "CHECK_URL and CRON_SECRET are not set on this repository."
             exit 1
           fi
-          for i in 1 2 3 4 5; do
-            curl -fsS -m 50 -H "Authorization: Bearer $CRON_SECRET" "$CHECK_URL" || echo "check $i failed"
-            echo
-            if [ "$i" != "5" ]; then
-              sleep 60
-            fi
-          done
+          curl -fsS -m 50 -H "Authorization: Bearer $CRON_SECRET" "$CHECK_URL" || echo "check failed"
+          echo

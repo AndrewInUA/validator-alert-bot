@@ -2,7 +2,7 @@
 
 Telegram alerts for **validator operators**. This is its own project. It does not share a bot, a token, or a database with the Open Solana Hub delegator bot.
 
-A chat watches vote accounts on mainnet or testnet. About once a minute, a check running off your laptop reads the public network. When a watched validator stops voting, the chat gets one message and the reason the network can show. When it votes again, the chat gets one more message.
+A chat watches vote accounts on mainnet or testnet. About every five minutes, a check running off your laptop reads the public network. When a watched validator stops voting, the chat gets one message and the reason the network can show. When it votes again, the chat gets one more message.
 
 The laptop can be shut. The check runs on GitHub and calls this project on Vercel.
 
@@ -31,7 +31,7 @@ The bot refuses a seed phrase or a keypair. The alarm is the **vote account**. T
 curl -H "Authorization: Bearer YOUR_CRON_SECRET" https://YOUR-PROJECT.vercel.app/api/setup
 ```
 
-7. On the GitHub repository for **this** project, add two secrets: `CHECK_URL` (`https://YOUR-PROJECT.vercel.app/api/check`) and `CRON_SECRET` (the same secret as on Vercel). The workflow [`.github/workflows/check.yml`](.github/workflows/check.yml) then checks every minute without this laptop.
+7. On the GitHub repository for **this** project, add two secrets: `CHECK_URL` (`https://YOUR-PROJECT.vercel.app/api/check`) and `CRON_SECRET` (the same secret as on Vercel). The workflow [`.github/workflows/check.yml`](.github/workflows/check.yml) then checks every five minutes without this laptop.
 
 Vercel’s free plan can only run its own timer once a day, so the timer is GitHub, not the Vercel cron. The Hub project is not involved.
 
