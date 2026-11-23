@@ -5,7 +5,7 @@
  */
 const { mainKeyboard } = require("../lib/commands");
 const { createStore } = require("../lib/store");
-const { readFacts, readCluster, readStake, readRules } = require("../lib/solana");
+const { readFacts, readCluster, readStake, readEpochReward, readRules } = require("../lib/solana");
 const { runAlerts } = require("../lib/run");
 const { botToken, sendMessage } = require("../lib/telegram");
 
@@ -71,6 +71,7 @@ module.exports = async function check(req, res) {
       readFacts,
       readCluster,
       readStake,
+      readEpochReward,
       readRules
     });
     let sent = 0;

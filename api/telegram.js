@@ -5,7 +5,7 @@
  */
 const { handleText, mainKeyboard } = require("../lib/commands");
 const { createStore } = require("../lib/store");
-const { lookupVote, readFacts, readCluster, readStake, readStakeDetail, readRules } = require("../lib/solana");
+const { lookupVote, readFacts, readCluster, readStake, readStakeDetail, readEpochReward, readRules } = require("../lib/solana");
 const { readPools } = require("../lib/pool-directory");
 const { botToken, sendMessage } = require("../lib/telegram");
 
@@ -87,6 +87,7 @@ module.exports = async function telegramWebhook(req, res) {
       readCluster,
       readStake,
       readStakeDetail,
+      readEpochReward,
       readPools,
       readRules
     });
