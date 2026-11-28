@@ -7,6 +7,7 @@ const { mainKeyboard } = require("../lib/commands");
 const { createStore } = require("../lib/store");
 const { readFacts, readCluster, readStake, readEpochReward, readRules } = require("../lib/solana");
 const { runAlerts } = require("../lib/run");
+const { PACE_KEY, dueForCheck } = require("../lib/pace");
 const { botToken, sendMessage } = require("../lib/telegram");
 
 function json(res, status, body) {
@@ -63,6 +64,12 @@ module.exports = async function check(req, res) {
   }
 
   try {
+    const pace = await store.getStatus(PACE_KEY);
+    if (!dueForCheck(pace, Date.now())) {
+      json(res, 200, { ok: true, skipped: true });
+      return;
+    }
+    await store.setStatus(PACE_KEY, { ranAt: new Date().toISOString() });
     const subs = await store.listSubs();
     const alerts = await runAlerts({
       subs,
